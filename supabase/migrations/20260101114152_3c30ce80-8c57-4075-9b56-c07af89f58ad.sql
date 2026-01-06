@@ -1,4 +1,4 @@
--- Drop the security definer view and recreate as regular view
+
 DROP VIEW IF EXISTS public.dashboard_metrics;
 
 CREATE VIEW public.dashboard_metrics WITH (security_invoker = true) AS
