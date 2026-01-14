@@ -20,15 +20,27 @@ export default function AuthPage() {
     setError('');
 
     const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const fullName = formData.get('full_name') as string;
+    const email = formData.get('email')?.toString() ?? "";
+    const password = formData.get('password')?.toString() ?? "";
+    const fullName = formData.get('full_name')?.toString() ?? "";
 
-    const { error } = isLogin 
-      ? await signIn(email, password)
-      : await signUp(email, password, fullName);
+    let response;
 
-    if (error) setError(error.message);
+    if (isLogin) {
+      response = await signIn(email, password);
+    } else {
+      if (!fullName.trim()) {
+        setError("Full name is required");
+        setLoading(false);
+        return;
+      }
+      response = await signUp(email, password, fullName);
+    }
+
+    if (response.error) {
+      setError(response.error.message || "Authentication failed");
+    }
+
     setLoading(false);
   };
 
